@@ -24,17 +24,17 @@ data {
   // Número de niveles del año
   int<lower=1> Y;
 
-  int<lower=1, upper=C> Comuna[N]; // Variable comuna 
+  int<lower=1, upper=C> Commune[N]; // Variable comuna 
   
-  int<lower=1, upper=E> Esquema[N]; // Variable esquema de vacunación 
+  int<lower=1, upper=E> Scheme[N]; // Variable esquema de vacunación 
 
-  int<lower=1, upper=D> Desarrollo[N]; // Variable crecimiento y desarrollo
+  int<lower=1, upper=D> Development[N]; // Variable crecimiento y desarrollo
 
-  int<lower=1, upper=S> Seguridad[N]; // Variable comuna 
+  int<lower=1, upper=S> Security[N]; // Variable comuna 
   
-  int<lower=1, upper=G> Genero[N]; 
+  int<lower=1, upper=G> Gender[N]; 
   
-  int<lower=1, upper=Y> Periodo[N];
+  int<lower=1, upper=Y> Period[N];
   
   int<lower=0,upper=1> y[N];
   
@@ -47,82 +47,82 @@ parameters {
    // vector de coeficientes
   vector[P] beta;
   
-  vector[C] comuna; // comunas
+  vector[C] commune; // comunas
   
-  vector[E] esquema; 
+  vector[E] scheme; 
   
-  vector[D] desarrollo; 
+  vector[D] development; 
   
-  vector[S] seguridad; 
+  vector[S] security; 
   
-  vector[G] genero;
+  vector[G] gender;
   
-  vector[Y] periodo;
+  vector[Y] period;
   
   real<lower=0> sigma;
   
 }
 
 transformed parameters{
-  vector[C] comuna_cen;
+  vector[C] commune_cen;
   
-  vector[E] esquema_cen;
+  vector[E] scheme_cen;
   
-  vector[D] desarrollo_cen;
+  vector[D] development_cen;
   
-  vector[S] seguridad_cen;
+  vector[S] security_cen;
   
-  vector[G] genero_cen;
+  vector[G] gender_cen;
   
-  vector[Y] periodo_cen;
+  vector[Y] period_cen;
   
-  comuna_cen =  comuna - mean(comuna); // sum = 0, estabilidad numérica
+  commune_cen =  commune - mean(commune); // sum = 0, estabilidad numérica
   
-  esquema_cen =  esquema - mean(esquema);
+  scheme_cen =  scheme - mean(scheme);
   
-  desarrollo_cen =  desarrollo - mean(desarrollo);
+  development_cen =  development - mean(development);
   
-  seguridad_cen =  seguridad - mean(seguridad);
+  security_cen =  security - mean(security);
   
-  genero_cen =  genero - mean(genero);
+  gender_cen =  gender - mean(gender);
   
-  periodo_cen =  periodo - mean(periodo);
+  period_cen =  period - mean(period);
   
 }
 
 model {
   // A prioris
-  comuna ~ normal(0, 1);
+  commune ~ normal(0, 1);
   
-  esquema ~ normal(0, 1);
+  scheme ~ normal(0, 1);
   
-  desarrollo ~ normal(0, 1);
+  development ~ normal(0, 1);
   
-  seguridad ~ normal(0, 1);
+  security ~ normal(0, 1);
   
-  genero ~ normal(0,1);
+  gender ~ normal(0,1);
   
-  periodo ~ normal(0,1);
+  period ~ normal(0,1);
   
   beta ~ normal(0, 1);
   
   // Verosimilitud
   for(i in 1:N){
 y[i] ~ bernoulli_logit(
-      comuna_cen[Comuna[i]] + esquema_cen[Esquema[i]] + desarrollo_cen[Desarrollo[i]] +
-      seguridad_cen[Seguridad[i]] + genero_cen[Genero[i]] +
-      periodo_cen[Periodo[i]] + X[i] * beta 
+      commune_cen[Commune[i]] + scheme_cen[Scheme[i]] + development_cen[Development[i]] +
+      security_cen[Security[i]] + gender_cen[Gender[i]] +
+      period_cen[Period[i]] + X[i] * beta 
     );
     }
 }
 
 generated quantities{
-real<lower=0>  S_comuna;
-real<lower=0>  S_esquema;
-real<lower=0>  S_crecimiento;
-real<lower=0>  S_seguridad;
-real<lower=0> S_genero;
-real<lower=0> S_periodo;
+real<lower=0>  S_commune;
+real<lower=0>  S_scheme;
+real<lower=0>  S_development;
+real<lower=0>  S_security;
+real<lower=0> S_gender;
+real<lower=0> S_period;
 // 
  matrix[C, C] C1; // comunas
  row_vector[C] b1 = rep_vector(1.0, C)';
@@ -144,11 +144,11 @@ real<lower=0> S_periodo;
  for(j in 1:G) G1[j] = b6;
  for(j in 1:Y) Y1[j] = b7;
 
- S_comuna = pow(pow(C-1, -1)*comuna_cen'*(diag_matrix(rep_vector(1.0, C)) - pow(C, -1)*C1)*comuna_cen, 0.5);
- S_esquema = pow(pow(E-1, -1)*esquema_cen'*(diag_matrix(rep_vector(1.0, E)) - pow(E, -1)*E1)*esquema_cen, 0.5);
- S_crecimiento = pow(pow(D-1, -1)*desarrollo_cen'*(diag_matrix(rep_vector(1.0, D)) - pow(D, -1)*D1)*desarrollo_cen, 0.5);
- S_seguridad = pow(pow(S-1, -1)*seguridad_cen'*(diag_matrix(rep_vector(1.0, S)) - pow(S, -1)*S1)*seguridad_cen, 0.5);
- S_genero = pow(pow(G-1, -1)*genero_cen'*(diag_matrix(rep_vector(1.0, G)) - pow(G, -1)*G1)*genero_cen, 0.5);
- S_periodo = pow(pow(Y-1, -1)*periodo_cen'*(diag_matrix(rep_vector(1.0, Y)) - pow(Y, -1)*Y1)*periodo_cen, 0.5);
+ S_commune = pow(pow(C-1, -1)*commune_cen'*(diag_matrix(rep_vector(1.0, C)) - pow(C, -1)*C1)*commune_cen, 0.5);
+ S_scheme = pow(pow(E-1, -1)*scheme_cen'*(diag_matrix(rep_vector(1.0, E)) - pow(E, -1)*E1)*scheme_cen, 0.5);
+ S_development = pow(pow(D-1, -1)*development_cen'*(diag_matrix(rep_vector(1.0, D)) - pow(D, -1)*D1)*development_cen, 0.5);
+ S_security = pow(pow(S-1, -1)*security_cen'*(diag_matrix(rep_vector(1.0, S)) - pow(S, -1)*S1)*security_cen, 0.5);
+ S_gender = pow(pow(G-1, -1)*gender_cen'*(diag_matrix(rep_vector(1.0, G)) - pow(G, -1)*G1)*gender_cen, 0.5);
+ S_period = pow(pow(Y-1, -1)*period_cen'*(diag_matrix(rep_vector(1.0, Y)) - pow(Y, -1)*Y1)*period_cen, 0.5);
 }
 

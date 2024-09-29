@@ -38,17 +38,17 @@ stan_data_models12 <- list(
   
   "Y" = 8, # Niveles año
   
-  "Comuna" = datos_final$comuna,
+  "Commune" = datos_final$comuna,
   
-  "Esquema" = datos_final$esq_vac,
+  "Scheme" = datos_final$esq_vac,
   
-  "Desarrollo" = datos_final$crec_dllo,
+  "Development" = datos_final$crec_dllo,
   
-  "Seguridad" = datos_final$tipo_ss_, 
+  "Security" = datos_final$tipo_ss_, 
   
-  "Genero" = datos_final$sexo_,
+  "Gender" = datos_final$sexo_,
   
-  "Periodo" = datos_final$year_
+  "Period" = datos_final$year_
   
 )
 
@@ -59,76 +59,76 @@ fit_models12 <- stan(file = file.choose(), data = stan_data_models12, chains = 3
 print(fit_models12, pars = "beta")
 
 #summary de las comunas
-print(fit_models12, pars = "comuna_cen")
+print(fit_models12, pars = "commune_cen")
 
 #summary del esquema de vacunación
-print(fit_models12, pars = "esquema_cen")
+print(fit_models12, pars = "scheme_cen")
 
 #summary de  crecimiento y desarrollo
-print(fit_models12, pars = "desarrollo_cen")
+print(fit_models12, pars = "development_cen")
 
 #summary de seguridad social
-print(fit_models12, pars = "seguridad_cen")
+print(fit_models12, pars = "security_cen")
 
 #summary de genero
-print(fit_models12, pars = "genero_cen")
+print(fit_models12, pars = "gender_cen")
 
 #summary de año
-print(fit_models12, pars = "periodo_cen")
+print(fit_models12, pars = "period_cen")
 
 
 #Se extraen los valores simulados en txt
-Beta.poste <- extract(fit_models12, pars = "beta")
-comuna.poste <- extract(fit_models12, pars = "comuna_cen")
-esquema.poste <- extract(fit_models12, pars = "esquema_cen")
-desarrollo.poste <- extract(fit_models12, pars = "desarrollo_cen")
-seguridad.poste <- extract(fit_models12, pars = "seguridad_cen")
-genero.poste <- extract(fit_models12, pars = "genero_cen")
-periodo.poste <- extract(fit_models12, pars = "periodo_cen")
+beta_poste <- extract(fit_models12, pars = "beta")
+commune_poste <- extract(fit_models12, pars = "commune_cen")
+scheme_poste <- extract(fit_models12, pars = "scheme_cen")
+development_poste <- extract(fit_models12, pars = "development_cen")
+security_poste <- extract(fit_models12, pars = "security_cen")
+gender_poste <- extract(fit_models12, pars = "gender_cen")
+period_poste <- extract(fit_models12, pars = "period_cen")
 {
 # IMPORTANTE: Cambiar dirección de archivo para guardar los resultados
-beta.data <- as.data.frame(Beta.poste) 
-write(x=t(beta.data), file='/home/ruser/Definitive_model/Resultados/Betas posterior.txt', ncolumns=5, append=TRUE)
-comuna.data <- as.data.frame(comuna.poste) 
-write(x=t(comuna.data), file='/home/ruser/Definitive_model/Resultados/Comunas posterior.txt', ncolumns=22, append=TRUE)
-esquema.data <- as.data.frame(esquema.poste) 
-write(x=t(esquema.data), file='/home/ruser/Definitive_model/Resultados/Esquemas posterior.txt', ncolumns=3, append=TRUE)
-desarrollo.data <- as.data.frame(desarrollo.poste) 
-write(x=t(desarrollo.data), file='/home/ruser/Definitive_model/Resultados/Crecimiento posterior.txt', ncolumns=2, append=TRUE)
-seguridad.data <- as.data.frame(seguridad.poste) 
-write(x=t(seguridad.data), file='/home/ruser/Definitive_model/Resultados/Seguridad posterior.txt', ncolumns=5, append=TRUE)
-genero.data <- as.data.frame(genero.poste) 
-write(x=t(genero.data), file='/home/ruser/Definitive_model/Resultados/Genero posterior.txt', ncolumns=2, append=TRUE)
-periodo.data <- as.data.frame(periodo.poste) 
-write(x=t(periodo.data), file='/home/ruser/Definitive_model/Resultados/Periodo posterior.txt', ncolumns=8, append=TRUE)
+beta_data <- as.data.frame(beta_poste) 
+write(x=t(beta_data), file='/home/ruser/Definitive_model/Resultados/posterior_betas.txt', ncolumns=5, append=TRUE)
+commune_data <- as.data.frame(commune_poste) 
+write(x=t(commune_data), file='/home/ruser/Definitive_model/Resultados/posterior_communes.txt', ncolumns=22, append=TRUE)
+scheme_data <- as.data.frame(scheme_poste) 
+write(x=t(scheme_data), file='/home/ruser/Definitive_model/Resultados/posterior_schemes.txt', ncolumns=3, append=TRUE)
+development_data <- as.data.frame(development_poste) 
+write(x=t(development_data), file='/home/ruser/Definitive_model/Resultados/posterior_growth.txt', ncolumns=2, append=TRUE)
+security_data <- as.data.frame(security_poste) 
+write(x=t(security_data), file='/home/ruser/Definitive_model/Resultados/posterior_security.txt', ncolumns=5, append=TRUE)
+gender_data <- as.data.frame(gender_poste) 
+write(x=t(gender_data), file='/home/ruser/Definitive_model/Resultados/posterior_gender.txt', ncolumns=2, append=TRUE)
+period_data <- as.data.frame(period_poste) 
+write(x=t(period_data), file='/home/ruser/Definitive_model/Resultados/posterior_period.txt', ncolumns=8, append=TRUE)
 
 
 # traceplots 
 traceplot(fit_models12, pars = "beta")
-traceplot(fit_models12, pars = "comuna_cen")
-traceplot(fit_models12, pars = "esquema_cen")
-traceplot(fit_models12, pars = "desarrollo_cen")
-traceplot(fit_models12, pars = "seguridad_cen")
-traceplot(fit_models12, pars = "genero_cen")
-traceplot(fit_models12, pars = "periodo_cen")
+traceplot(fit_models12, pars = "commune_cen")
+traceplot(fit_models12, pars = "scheme_cen")
+traceplot(fit_models12, pars = "development_cen")
+traceplot(fit_models12, pars = "security_cen")
+traceplot(fit_models12, pars = "gender_cen")
+traceplot(fit_models12, pars = "period_cen")
 
 # IMPORTANTE: Cambiar dirección de archivo para guardar los resultados
 # Se guarda los s_alpha 
-comuna_sim <- c(fit_models12@sim[[1]][[1]]$S_comuna,fit_models12@sim[[1]][[2]]$S_comuna ,fit_models12@sim[[1]][[3]]$S_comuna)
-write(x=t(comuna_sim), file='/home/ruser/Definitive_model/Resultados/S_comunas.txt', ncolumns=1, append=TRUE)
+commune_sim <- c(fit_models12@sim[[1]][[1]]$S_commune,fit_models12@sim[[1]][[2]]$S_commune ,fit_models12@sim[[1]][[3]]$S_commune)
+write(x=t(commune_sim), file='/home/ruser/Definitive_model/Resultados/S_commune.txt', ncolumns=1, append=TRUE)
 
-esq_sim <- c(fit_models12@sim[[1]][[1]]$S_esquema,fit_models12@sim[[1]][[2]]$S_esquema,fit_models12@sim[[1]][[3]]$S_esquema)
-write(x=t(esq_sim), file='/home/ruser/Definitive_model/Resultados/S_esq.txt', ncolumns=1, append=TRUE)
+scheme_sim <- c(fit_models12@sim[[1]][[1]]$S_scheme,fit_models12@sim[[1]][[2]]$S_scheme,fit_models12@sim[[1]][[3]]$S_scheme)
+write(x=t(scheme_sim), file='/home/ruser/Definitive_model/Resultados/S_scheme.txt', ncolumns=1, append=TRUE)
 
-crec_sim <- c(fit_models12@sim[[1]][[1]]$S_crecimiento,fit_models12@sim[[1]][[2]]$S_crecimiento,fit_models12@sim[[1]][[3]]$S_crecimiento)
-write(x=t(crec_sim), file='/home/ruser/Definitive_model/Resultados/S_crec.txt', ncolumns=1, append=TRUE)
+development_sim <- c(fit_models12@sim[[1]][[1]]$S_development,fit_models12@sim[[1]][[2]]$S_development,fit_models12@sim[[1]][[3]]$S_development)
+write(x=t(development_sim), file='/home/ruser/Definitive_model/Resultados/S_development.txt', ncolumns=1, append=TRUE)
 
-seg_sim <- c(fit_models12@sim[[1]][[1]]$S_seguridad,fit_models12@sim[[1]][[2]]$S_seguridad,fit_models12@sim[[1]][[3]]$S_seguridad)
-write(x=t(seg_sim), file='/home/ruser/Definitive_model/Resultados/S_seg.txt', ncolumns=1, append=TRUE)
+security_sim <- c(fit_models12@sim[[1]][[1]]$S_security,fit_models12@sim[[1]][[2]]$S_security,fit_models12@sim[[1]][[3]]$S_security)
+write(x=t(security_sim), file='/home/ruser/Definitive_model/Resultados/S_security.txt', ncolumns=1, append=TRUE)
 
-gen_sim <- c(fit_models12@sim[[1]][[1]]$S_genero,fit_models12@sim[[1]][[2]]$S_genero,fit_models12@sim[[1]][[3]]$S_genero)
-write(x=t(gen_sim), file='/home/ruser/Definitive_model/Resultados/S_genero.txt', ncolumns=1, append=TRUE)
+gender_sim <- c(fit_models12@sim[[1]][[1]]$S_gender,fit_models12@sim[[1]][[2]]$S_gender,fit_models12@sim[[1]][[3]]$S_gender)
+write(x=t(gender_sim), file='/home/ruser/Definitive_model/Resultados/S_gender.txt', ncolumns=1, append=TRUE)
 
-per_sim <- c(fit_models12@sim[[1]][[1]]$S_periodo,fit_models12@sim[[1]][[2]]$S_periodo,fit_models12@sim[[1]][[3]]$S_periodo)
-write(x=t(per_sim), file='/home/ruser/Definitive_model/Resultados/S_periodo.txt', ncolumns=1, append=TRUE)
+period_sim <- c(fit_models12@sim[[1]][[1]]$S_period,fit_models12@sim[[1]][[2]]$S_period,fit_models12@sim[[1]][[3]]$S_period)
+write(x=t(period_sim), file='/home/ruser/Definitive_model/Resultados/S_period.txt', ncolumns=1, append=TRUE)
 }
