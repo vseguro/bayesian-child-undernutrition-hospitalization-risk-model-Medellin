@@ -28,3 +28,23 @@ AgeConversion <- function(year, unidad){
   }
   return(age)
 }
+
+# Function implemented in the "estimates_anova.R" file to calculate quantiles at
+# the 0% (minimum), 5% (5th percentile), 50% (median), 95% (95th percentile), and 
+# 100% (maximum) positions of the samples
+f <- function(x) {
+  r <- quantile(x, probs = c(0, 0.05, 0.5, 0.95, 1)) 
+  names(r) <- c("ymin", "lower", "middle", "upper", "ymax")
+  r
+}
+
+# Function implemented in the "estimates_anova.R" file to remove outliers from 
+# the samples
+remove_outliers <- function(x, na.rm = TRUE, ...) {
+  qnt <- quantile(x, probs=c(.05, .95), na.rm = na.rm, ...)
+  H <- 1.5 * IQR(x, na.rm = na.rm)
+  y <- x
+  y[x < (qnt[1] - H)] <- NA
+  y[x > (qnt[2] + H)] <- NA
+  y
+}
