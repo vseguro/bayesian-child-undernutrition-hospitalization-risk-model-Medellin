@@ -13,5 +13,18 @@ WHZIndexCalculation <- function(datazscoreNA){
   
   WHZ <- (((weight/median)^power)-1)/(power*variation)
   return(WHZ)
-  
+}
+
+AgeConversion <- function(year, unidad){
+  if(unidad == "1"){ # Year
+    age <- year*12
+  }
+  else if(unidad == "3"){ # Days
+    age <- year/30
+  }else if(unidad == "4"){
+    age <- year/720
+  }else {
+    age <- year
+  }
+  return(age)
 }
