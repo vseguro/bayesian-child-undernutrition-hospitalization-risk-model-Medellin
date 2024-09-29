@@ -21,9 +21,12 @@ MakeDataset <- function(){
                            "per_braqu", colnames(data_2023)[25:26])
   
   ## Select variables of interest (columns) from each dataset
-  data_2021 <- data_2021[,c(1,3:5,6,7,8,13,16:20,22:24, 26)]
-  data_2022 <- data_2022[,c(1,3:5,6,7,8,13,16:20,22:24, 26)]
-  data_2023 <- data_2023[,c(1,3:5,6,7,8,13,16:20,22:24, 26)]
+  data_2021 <- data_2021[,c("edad_", "uni_med_" , "sexo_", "comuna", "tipo_ss_","pac_hos_","edad_ges", "crec_dllo",
+                            "esq_vac" ,"peso_act","talla_act", "year_")]
+  data_2022 <- data_2022[,c("edad_", "uni_med_" , "sexo_", "comuna", "tipo_ss_","pac_hos_","edad_ges", "crec_dllo",
+                            "esq_vac" ,"peso_act","talla_act", "year_")]
+  data_2023 <- data_2023[,c("edad_", "uni_med_" , "sexo_", "comuna", "tipo_ss_","pac_hos_","edad_ges", "crec_dllo",
+                            "esq_vac" ,"peso_act","talla_act", "year_")]
   
   # Combine all the datasets into one by stacking rows
   full_data <- rbind(data_2021, data_2022, data_2023)
@@ -33,12 +36,9 @@ MakeDataset <- function(){
     edad_ <- as.numeric(edad_)                   # Age in numeric format
     uni_med_ <- as.factor(uni_med_)              # Unit of measurement as a factor
     sexo_ <- as.factor(sexo_)                    # Gender as a factor
-    nombre_barrio <- as.factor(nombre_barrio)    # Neighborhood name as a factor
     comuna <- as.factor(comuna)                  # Commune as a factor
     pac_hos_ <- as.factor(pac_hos_)              # Hospitalized patient status as a factor
     edad_ges <- as.numeric(edad_ges)             # Gestational age in numeric format
-    t_lechem <- as.numeric(t_lechem)             # Time on breast milk in numeric format
-    e_complem <- as.numeric(e_complem)           # Time on complementary feeding in numeric format
     crec_dllo <- as.factor(crec_dllo)            # Growth and development status as a factor
     esq_vac <- as.factor(esq_vac)                # Vaccination schedule as a factor
     tipo_ss_ <- as.factor(tipo_ss_)              # Social security type as a factor
@@ -48,15 +48,14 @@ MakeDataset <- function(){
   # Replace commas with dots in weight, height, and arm circumference, then convert to numeric
   full_data$peso_act <- sub(",",".", full_data$peso_act) |> as.numeric()
   full_data$talla_act <- sub(",",".", full_data$talla_act) |> as.numeric()
-  full_data$per_braqu <- sub(",",".", full_data$per_braqu) |> as.numeric()
-  
+
   ## Age conversion: Apply a custom function to convert age to months
   for(i in 1:dim(full_data)[1]){
     full_data$edad_[i] <- AgeConversion(full_data[i,2],full_data[i,3])
   }
   
   ## Eliminate the unit of measurement column as it's no longer needed
-  full_data <- full_data[,-3] 
+  full_data <- full_data[,-2] 
   
   ## Standardize levels in the "comuna" (commune) column
   levels(full_data$comuna) <- sub("^\\d*\\s*", "", levels(full_data$comuna)) 
@@ -101,5 +100,6 @@ MakeDataset <- function(){
   full_data$country <- "Colombia" 
   
   ## Export the cleaned and processed dataset as a CSV file
-  SaveData(full_data, data_folder = "interim", file_name = "full_data.csv")
+  SaveData(full_data, data_type = "interim", file_name = "full_data.csv")
 }
+MakeDataset()
