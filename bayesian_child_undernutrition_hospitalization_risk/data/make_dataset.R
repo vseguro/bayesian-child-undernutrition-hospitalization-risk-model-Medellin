@@ -1,7 +1,7 @@
 # The following script is in charge of merging the data since some of them come
 # from different sources of information (MEDATA and direct communication with Health Secretary of Medellin,
 # then the information is depured and cleaned and the resulting file is the one 
-# used in the WHO application to obtain the corresponding  WHZ, HAZ, WAZ scores.
+# used in the WHO application (https://worldhealthorg.shinyapps.io/anthro/) to obtain the corresponding  WHZ, HAZ, WAZ scores.
 
 ## Loading libraries:
 library(dplyr)
@@ -102,4 +102,4 @@ MakeDataset <- function(){
   ## Export the cleaned and processed dataset as a CSV file
   SaveData(full_data, data_type = "interim", file_name = "full_data.csv")
 }
-MakeDataset()
+

@@ -1,7 +1,7 @@
 # The following script is in charge of making the final adjustments to obtain the final data.
-# Read the base obtained in the WHO application with the data created with the MakeDataset() function
-# and thus obtain the WHZ, HAZ, WAZ scores. Then eliminate outliers according to these indices and finally
-# adapt the levels of categorical variables.
+# Read the base obtained in the WHO application (https://worldhealthorg.shinyapps.io/anthro/) with the data
+# created with the MakeDataset() function and thus obtain the WHZ, HAZ, WAZ scores. Then eliminate outliers
+# according to these indices and finally adapt the levels of categorical variables.
 
 library(dplyr)
 source("bayesian_child_undernutrition_hospitalization_risk/utils/load_data.R")
@@ -25,6 +25,10 @@ BuildFeatures <- function(){
   full_data_zscore <- full_data_zscore %>% filter(!is.na(WHZ))
   
   ## Handle missing observations (add median and variation manually for some observations)
+  ## These values are added from https://www.who.int/tools/child-growth-standards/standards/weight-for-length-height 
+  ## since the application did not have the capacity to display them because the children have characteristics 
+  ## not contemplated in the WHO application:
+  
   full_data_zscore_Na$median <- c(5.9907, 6.3738, 3.1560, 2.4410, 5.5632, 6.3738, 2.948)
   full_data_zscore_Na$variation <- c(0.08342, 0.09135, 0.0906, 0.09182, 0.08406, 0.09135, 0.09007)
   
