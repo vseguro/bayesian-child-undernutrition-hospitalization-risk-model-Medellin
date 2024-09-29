@@ -15,12 +15,12 @@ source("bayesian_child_undernutrition_hospitalization_risk/utils/load_data.R")
 ## Bayesian ANOVA
 
 # Load sample from the posterior distribution of the finite variance of each qualitative predictor. 
-commune_sim <- LoadData("S_commune.txt", data_type = "processed/Definitive_model")
-development_sim <- LoadData("S_development.txt", data_type = "processed/Definitive_model")
-security_sim <- LoadData("S_security.txt", data_type = "processed/Definitive_model")
-scheme_sim <- LoadData("S_scheme.txt", data_type = "processed/Definitive_model")
-gender_sim <- LoadData("S_gender.txt", data_type = "processed/Definitive_model")
-period_sim <- LoadData("S_period.txt", data_type = "processed/Definitive_model")
+commune_sim <- LoadData("S_commune.txt", data_type = "processed/variance_samples")
+development_sim <- LoadData("S_development.txt", data_type = "processed/variance_samples")
+security_sim <- LoadData("S_security.txt", data_type = "processed/variance_samples")
+scheme_sim <- LoadData("S_scheme.txt", data_type = "processed/variance_samples")
+gender_sim <- LoadData("S_gender.txt", data_type = "processed/variance_samples")
+period_sim <- LoadData("S_period.txt", data_type = "processed/variance_samples")
 
 # Remove sample values that are significantly below or above the 5% and 95% quantiles,
 # respectively, based on the interquartile range (IQR)
@@ -68,17 +68,19 @@ Anova <- ggplot(S_alphas_grup, aes(x=Grupo, y=S_alpha)) +
   labs(y = expression(S[alpha]), x = "", title = "Bayesian ANOVA")+
   coord_flip()
 
+# save chart in pdf format
+save_plot_pdf(Anova)
 
 ## Point estimates and 90% credible intervals for the fixed effects of qualitative predictors
 
 # Load and exponentiate the samples obtained from the posterior distributions of the effects
-beta_poste <-   exp(LoadData(file_name = "posterior_betas.txt", data_type = "processed/effects_samples"))
-commune_poste <- exp(LoadData(file_name = "posterior_communes.txt", data_type = "processed/effects_samples"))
-scheme_poste <- exp(LoadData(file_name = "posterior_schemes.txt", data_type = "processed/effects_samples"))
-development_poste <- exp(LoadData(file_name = "posterior_growth.txt", data_type = "processed/effects_samples"))
-security_poste <- exp(LoadData(file_name = "posterior_security.txt", data_type = "processed/effects_samples"))
-gender_poste <- exp(LoadData(file_name = "posterior_gender.txt", data_type = "processed/effects_samples"))
-period_poste <- exp(LoadData(file_name = "posterior_period.txt", data_type = "processed/effects_samples"))
+beta_poste <-   exp(LoadData(file_name = "posterior_betas.txt", data_type = "processed/fixed_effects_samples"))
+commune_poste <- exp(LoadData(file_name = "posterior_communes.txt", data_type = "processed/fixed_effects_samples"))
+scheme_poste <- exp(LoadData(file_name = "posterior_schemes.txt", data_type = "processed/fixed_effects_samples"))
+development_poste <- exp(LoadData(file_name = "posterior_growth.txt", data_type = "processed/fixed_effects_samples"))
+security_poste <- exp(LoadData(file_name = "posterior_security.txt", data_type = "processed/fixed_effects_samples"))
+gender_poste <- exp(LoadData(file_name = "posterior_gender.txt", data_type = "processed/fixed_effects_samples"))
+period_poste <- exp(LoadData(file_name = "posterior_period.txt", data_type = "processed/fixed_effects_samples"))
 
 # Name columns with the levels of the respective predictor
 colnames(beta_poste) <- c("Intercept", "Age", "Weight", "length/height", "Gestational age")
