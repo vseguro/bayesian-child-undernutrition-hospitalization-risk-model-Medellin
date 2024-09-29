@@ -47,3 +47,17 @@ SaveData <- function(dataframe, data_type = "raw", file_name, ...){
   print(paste("The", file_name, "file has been saved correctly!"))
 }
 
+## Function to save the model outputs: fixed effects sample and variance samples as txt.
+write_posterior_data <- function(data, file_path, ncolumns, as_df = TRUE) {
+  
+  # Converts the object to dataframe
+  if(as_df == TRUE){
+    data <- as.data.frame(data)
+    # Transposes and writes to the file
+    write(x = t(data), file = file_path, ncolumns = ncolumns, append = TRUE)
+  }else{
+    # Transposes and writes to the file
+    write(x = t(data), file = file_path, ncolumns = ncolumns, append = TRUE)
+  }
+}
+

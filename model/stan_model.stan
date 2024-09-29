@@ -1,53 +1,54 @@
 data {
 
-  // Tamaño de la muestra
+  // Sample size
   int<lower=0> N;
 
-  // Número de elementos en la matriz de diseño, variables sin comuna, esq + crec + tipo_ss + intercepto
-  int<lower=0> P; // Parámetros fijos
+  // Number of elements in the design matrix, variables without commune, vaccination scheme +
+  // growth and development + social security + intercept
+  int<lower=0> P; // Fixed parameters
   
-  // Cantidad de niveles comuna
+  // Number of levels commune
   int<lower=1> C;
   
-  // Cantidad de niveles esquema
+  // Number of levels of vaccination scheme
   int<lower=1> E;
   
   // Cantidad de niveles crecimiento y desarrollo 
   int<lower=1> D;
   
-  // Cantidad de niveles seguridad social
+  // Number of social security levels
   int<lower=1> S;
 
-  // Número de niveles del género
+  // Number of gender levels
   int<lower=1> G;
   
-  // Número de niveles del año
+  // Number of year levels
   int<lower=1> Y;
 
-  int<lower=1, upper=C> Commune[N]; // Variable comuna 
+  int<lower=1, upper=C> Commune[N]; // Commune variable
   
-  int<lower=1, upper=E> Scheme[N]; // Variable esquema de vacunación 
+  int<lower=1, upper=E> Scheme[N]; // Vaccination schedule variable 
 
-  int<lower=1, upper=D> Development[N]; // Variable crecimiento y desarrollo
+  int<lower=1, upper=D> Development[N]; // Growth and development variable
 
-  int<lower=1, upper=S> Security[N]; // Variable comuna 
+  int<lower=1, upper=S> Security[N]; // Social security variable
   
-  int<lower=1, upper=G> Gender[N]; 
+  int<lower=1, upper=G> Gender[N]; // Gender variable
   
-  int<lower=1, upper=Y> Period[N];
+  int<lower=1, upper=Y> Period[N]; // Period variable
   
   int<lower=0,upper=1> y[N];
   
-  // variables de entrada x, matriz de predictores
+  // Predictor matrix
   matrix[N, P] X; 
 }
 
-// Parámetros del modelo
+// Model parameters
 parameters {
-   // vector de coeficientes
+   // coefficients vector
   vector[P] beta;
   
-  vector[C] commune; // comunas
+  vector[C] commune;
   
   vector[E] scheme; 
   
@@ -64,6 +65,8 @@ parameters {
 }
 
 transformed parameters{
+  // Transformed parameters to improve numerical stability
+  
   vector[C] commune_cen;
   
   vector[E] scheme_cen;
@@ -76,7 +79,7 @@ transformed parameters{
   
   vector[Y] period_cen;
   
-  commune_cen =  commune - mean(commune); // sum = 0, estabilidad numérica
+  commune_cen =  commune - mean(commune);
   
   scheme_cen =  scheme - mean(scheme);
   
@@ -91,7 +94,7 @@ transformed parameters{
 }
 
 model {
-  // A prioris
+  // A  priori distributions for the variables 
   commune ~ normal(0, 1);
   
   scheme ~ normal(0, 1);
@@ -106,7 +109,7 @@ model {
   
   beta ~ normal(0, 1);
   
-  // Verosimilitud
+  // Likelihood
   for(i in 1:N){
 y[i] ~ bernoulli_logit(
       commune_cen[Commune[i]] + scheme_cen[Scheme[i]] + development_cen[Development[i]] +
@@ -116,15 +119,17 @@ y[i] ~ bernoulli_logit(
     }
 }
 
-generated quantities{
+// Variance associated to each qualitative predictor:
+generated quantities {
+  
 real<lower=0>  S_commune;
 real<lower=0>  S_scheme;
 real<lower=0>  S_development;
 real<lower=0>  S_security;
 real<lower=0> S_gender;
 real<lower=0> S_period;
-// 
- matrix[C, C] C1; // comunas
+
+ matrix[C, C] C1; 
  row_vector[C] b1 = rep_vector(1.0, C)';
   matrix[E, E] E1;
  row_vector[E] b2 = rep_vector(1.0, E)';
