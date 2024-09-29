@@ -11,6 +11,7 @@ library(ggplot2)
 library(dplyr)
 library(tidyverse)
 source("bayesian_child_undernutrition_hospitalization_risk/utils/load_data.R")
+source("bayesian_child_undernutrition_hospitalization_risk/utils/utilities.R")
 
 ## Bayesian ANOVA
 
@@ -68,19 +69,16 @@ Anova <- ggplot(S_alphas_grup, aes(x=Grupo, y=S_alpha)) +
   labs(y = expression(S[alpha]), x = "", title = "Bayesian ANOVA")+
   coord_flip()
 
-# save chart in pdf format
-save_plot_pdf(Anova)
-
 ## Point estimates and 90% credible intervals for the fixed effects of qualitative predictors
 
-# Load and exponentiate the samples obtained from the posterior distributions of the effects
-beta_poste <-   exp(LoadData(file_name = "posterior_betas.txt", data_type = "processed/fixed_effects_samples"))
-commune_poste <- exp(LoadData(file_name = "posterior_communes.txt", data_type = "processed/fixed_effects_samples"))
-scheme_poste <- exp(LoadData(file_name = "posterior_schemes.txt", data_type = "processed/fixed_effects_samples"))
-development_poste <- exp(LoadData(file_name = "posterior_growth.txt", data_type = "processed/fixed_effects_samples"))
-security_poste <- exp(LoadData(file_name = "posterior_security.txt", data_type = "processed/fixed_effects_samples"))
-gender_poste <- exp(LoadData(file_name = "posterior_gender.txt", data_type = "processed/fixed_effects_samples"))
-period_poste <- exp(LoadData(file_name = "posterior_period.txt", data_type = "processed/fixed_effects_samples"))
+# Load the samples obtained from the posterior distributions of the effects
+beta_poste <-   LoadData(file_name = "posterior_betas.txt", data_type = "processed/fixed_effects_samples")
+commune_poste <- LoadData(file_name = "posterior_communes.txt", data_type = "processed/fixed_effects_samples")
+scheme_poste <- LoadData(file_name = "posterior_schemes.txt", data_type = "processed/fixed_effects_samples")
+development_poste <- LoadData(file_name = "posterior_growth.txt", data_type = "processed/fixed_effects_samples")
+security_poste <- LoadData(file_name = "posterior_security.txt", data_type = "processed/fixed_effects_samples")
+gender_poste <- LoadData(file_name = "posterior_gender.txt", data_type = "processed/fixed_effects_samples")
+period_poste <- LoadData(file_name = "posterior_period.txt", data_type = "processed/fixed_effects_samples")
 
 # Name columns with the levels of the respective predictor
 colnames(beta_poste) <- c("Intercept", "Age", "Weight", "length/height", "Gestational age")
@@ -124,7 +122,7 @@ commune <- ggplot(commune_poste2, aes(x=commune, y=Beta)) +
   stat_summary(fun.data = f, geom="boxplot",
                fill='steelblue',width = 0.1,position = position_dodge(width=0.5))+
   stat_summary(fun=median, geom="point", shape=21, size=4, col = "black",bg="cadetblue2")+
-  geom_hline(aes(yintercept=1), linetype="dashed", color = "blue",size = 0.5)+
+  geom_hline(aes(yintercept=0), linetype="dashed", color = "blue",size = 0.5)+
   labs(title = "Communes", y= expression(gamma), x = "")+
   theme(aspect.ratio = .8)+
   coord_flip()
@@ -133,7 +131,7 @@ scheme <- ggplot(scheme_poste2, aes(x=type, y=Beta)) +
   stat_summary(fun.data = f, geom="boxplot",
                fill='steelblue',width = 0.03,position = position_dodge(width=0.5))+
   stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
-  geom_hline(aes(yintercept=1), linetype="dashed", color = "blue")+
+  geom_hline(aes(yintercept=0), linetype="dashed", color = "blue")+
   labs(title = "Vaccination schedule", y= expression(gamma), x = "")+
   theme(aspect.ratio = .5)+
   coord_flip()
@@ -142,7 +140,7 @@ development <- ggplot(development_poste2, aes(x=type, y=Beta)) +
   stat_summary(fun.data = f, geom="boxplot",
                fill='steelblue',width = 0.03,position = position_dodge(width=0.5))+
   stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
-  geom_hline(aes(yintercept=1), linetype="dashed", color = "blue")+
+  geom_hline(aes(yintercept=0), linetype="dashed", color = "blue")+
   labs(title = "Growth and development program", y= expression(gamma), x = "")+
   theme(aspect.ratio = .5)+
   coord_flip()
@@ -151,7 +149,7 @@ security <- ggplot(security_poste2, aes(x=type, y=Beta)) +
   stat_summary(fun.data = f, geom="boxplot",
                fill='steelblue',width = 0.04,position = position_dodge(width=0.5))+
   stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
-  geom_hline(aes(yintercept=1), linetype="dashed", color = "blue")+
+  geom_hline(aes(yintercept=0), linetype="dashed", color = "blue")+
   labs(title = "Type of social security", y= expression(gamma), x = "")+
   theme(aspect.ratio = .5)+
   coord_flip()
@@ -160,7 +158,7 @@ gender <- ggplot(gender_poste2, aes(x=gender, y=Beta)) +
   stat_summary(fun.data = f, geom="boxplot",
                fill='steelblue',width = 0.04,position = position_dodge(width=0.5))+
   stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
-  geom_hline(aes(yintercept=1), linetype="dashed", color = "blue")+
+  geom_hline(aes(yintercept=0), linetype="dashed", color = "blue")+
   labs(title = "Gender", y= expression(gamma), x = "")+
   theme(aspect.ratio = .5)+
   coord_flip()
@@ -169,7 +167,7 @@ period <- ggplot(period_poste2, aes(x=year, y=Beta)) +
   stat_summary(fun.data = f, geom="boxplot",
                fill='steelblue',width = 0.04,position = position_dodge(width=0.5))+
   stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
-  geom_hline(aes(yintercept=1), linetype="dashed", color = "blue")+
+  geom_hline(aes(yintercept=0), linetype="dashed", color = "blue")+
   labs(title = "Year", y= expression(gamma), x = "")+
   theme(aspect.ratio = .5)+
   coord_flip()
