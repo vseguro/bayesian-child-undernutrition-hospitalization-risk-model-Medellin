@@ -10,7 +10,6 @@
 library(ggplot2)
 library(dplyr)
 library(tidyverse)
-library(HDInterval)
 source("bayesian_child_undernutrition_hospitalization_risk/utils/load_data.R")
 
 ## Bayesian ANOVA
@@ -75,7 +74,7 @@ Anova <- ggplot(S_alphas_grup, aes(x=Grupo, y=S_alpha)) +
 # Load and exponentiate the samples obtained from the posterior distributions of the effects
 beta_poste <-   exp(LoadData(file_name = "posterior_betas.txt", data_type = "processed/effects_samples"))
 commune_poste <- exp(LoadData(file_name = "posterior_communes.txt", data_type = "processed/effects_samples"))
-sheme_poste <- exp(LoadData(file_name = "posterior_schemes.txt", data_type = "processed/effects_samples"))
+scheme_poste <- exp(LoadData(file_name = "posterior_schemes.txt", data_type = "processed/effects_samples"))
 development_poste <- exp(LoadData(file_name = "posterior_growth.txt", data_type = "processed/effects_samples"))
 security_poste <- exp(LoadData(file_name = "posterior_security.txt", data_type = "processed/effects_samples"))
 gender_poste <- exp(LoadData(file_name = "posterior_gender.txt", data_type = "processed/effects_samples"))
@@ -83,7 +82,7 @@ period_poste <- exp(LoadData(file_name = "posterior_period.txt", data_type = "pr
 
 # Name columns with the levels of the respective predictor
 colnames(beta_poste) <- c("Intercept", "Age", "Weight", "length/height", "Gestational age")
-colnames(sheme_poste) <- c("Unknown", "No", "Yes")
+colnames(scheme_poste) <- c("Unknown", "No", "Yes")
 colnames(development_poste) <- c("Yes","No")
 colnames(security_poste) <- c("Contributory", "Special", "Uninsured", "Pending", "Subsidized")
 colnames(commune_poste) <- c("Altavista", "Aranjuez",                     
@@ -101,7 +100,7 @@ colnames(gender_poste) <- c("F", "M")
 colnames(period_poste) <- c("2016", "2017","2018","2019","2020","2021","2022","2023")
 
 # Associate each value (sample) with its corresponding predictor level
-sheme_poste2 <- gather(sheme_poste,"Unknown", "No", "Yes", key = "Tipo",value = "Beta")
+scheme_poste2 <- gather(scheme_poste,"Unknown", "No", "Yes", key = "Tipo",value = "Beta")
 development_poste2 <- gather(development_poste, "No", "Yes", key = "Tipo", value = "Beta")
 security_poste2 <- gather(security_poste,"Contributory", "Special", "Uninsured", "Pending", "Subsidized", key = "Tipo", value = "Beta")
 commune_poste2 <- gather(commune_poste,"Altavista", "Aranjuez",                     
@@ -128,7 +127,7 @@ commune <- ggplot(commune_poste2, aes(x=Comuna, y=Beta)) +
   theme(aspect.ratio = .8)+
   coord_flip()
 
-sheme <- ggplot(sheme_poste2, aes(x=Tipo, y=Beta)) + 
+scheme <- ggplot(scheme_poste2, aes(x=Tipo, y=Beta)) + 
   stat_summary(fun.data = f, geom="boxplot",
                fill='steelblue',width = 0.03,position = position_dodge(width=0.5))+
   stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+

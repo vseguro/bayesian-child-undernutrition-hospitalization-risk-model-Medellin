@@ -7,11 +7,10 @@
 ## Loading libraries
 library(ROCR)
 source("bayesian_child_undernutrition_hospitalization_risk/utils/load_data.R")
+source("bayesian_child_undernutrition_hospitalization_risk/features/build_features.R")
 
 ## Loading and preparation of the dataset used in model fitting (final dataset)
-data <- LoadData("acute_malnutrition_final_data.csv", data_type = "processed", sep = ",")
-# Remove the first column of the dataset, which corresponds to an identifier or index for each row
-data <- data[ , -1]  
+data <- BuildFeatures()
 
 ## create object for response variable
 y <- data$pac_hos_ 

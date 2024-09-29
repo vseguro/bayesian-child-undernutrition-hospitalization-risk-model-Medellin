@@ -136,4 +136,5 @@ BuildFeatures <- function(){
   
   ## Save the final processed dataset to a CSV file
   SaveData(final_data, data_type = "processed", file_name = "acute_malnutrition_final_data.csv")
+  return(final_data)
 }
