@@ -1,3 +1,6 @@
+## This script has helper functions needed to execute main code functions 
+
+# Function implemented in the "build_features.R" to calculate the z-score of the WHZ index
 WHZIndexCalculation <- function(datazscoreNA){
   weight = datazscoreNA$peso_act
   height = datazscoreNA$talla_act
@@ -15,6 +18,7 @@ WHZIndexCalculation <- function(datazscoreNA){
   return(WHZ)
 }
 
+# Function implemented in the "make_dataset.R" to convert the variable age to months
 AgeConversion <- function(year, unidad){
   if(unidad == "1"){ # Year
     age <- year*12

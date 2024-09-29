@@ -53,7 +53,7 @@ colnames(period_sim) <- "V1"
 # Merge data frame with final samples
 S_alphas <- rbind(commune_sim,development_sim,security_sim,scheme_sim,gender_sim,period_sim) 
 # Create data frame with the names of the qualitative predictors
-groups <- data.frame(rep(c("Commune(22)","Growth and \n development program(2)","Type of Social \n security(5)","Vaccination \n schedule(3)","Gender(2)", "Year(8)"), each = 150000)) # se identifica al grupo que pertencen (comuna, esquema, ...)
+groups <- data.frame(rep(c("Commune(22)","Growth and \n development program(2)","Type of Social \n security(5)","Vaccination \n schedule(3)","Gender(2)", "Year(8)"), each = 150000))
 # Combine S_alphas and groups by columns, obtaining a new data frame
 S_alphas_grup <- cbind(S_alphas,groups) 
 # Assign column names to the new data frame "S_alphas_grup"
@@ -100,9 +100,9 @@ colnames(gender_poste) <- c("F", "M")
 colnames(period_poste) <- c("2016", "2017","2018","2019","2020","2021","2022","2023")
 
 # Associate each value (sample) with its corresponding predictor level
-scheme_poste2 <- gather(scheme_poste,"Unknown", "No", "Yes", key = "Tipo",value = "Beta")
-development_poste2 <- gather(development_poste, "No", "Yes", key = "Tipo", value = "Beta")
-security_poste2 <- gather(security_poste,"Contributory", "Special", "Uninsured", "Pending", "Subsidized", key = "Tipo", value = "Beta")
+scheme_poste2 <- gather(scheme_poste,"Unknown", "No", "Yes", key = "type",value = "Beta")
+development_poste2 <- gather(development_poste, "No", "Yes", key = "type", value = "Beta")
+security_poste2 <- gather(security_poste,"Contributory", "Special", "Uninsured", "Pending", "Subsidized", key = "type", value = "Beta")
 commune_poste2 <- gather(commune_poste,"Altavista", "Aranjuez",                     
                        "Belen","Buenos Aires",                  
                        "Castilla","Corregimiento de San Cristobal",
@@ -113,12 +113,12 @@ commune_poste2 <- gather(commune_poste,"Altavista", "Aranjuez",
                        "Popular","Robledo",                       
                        "San Antonio de Prado","San Javier",                   
                        "San Sebastian de Palmitas", "Santa Cruz",                    
-                       "Villa Hermosa","No information", key = "Comuna", value = "Beta")
-gender_poste2 <- gather(gender_poste,"F", "M", key = "Sexo", value = "Beta")
-period_poste2 <- gather(period_poste,"2016", "2017","2018","2019","2020","2021","2022","2023", key = "Periodo", value = "Beta")
+                       "Villa Hermosa","No information", key = "commune", value = "Beta")
+gender_poste2 <- gather(gender_poste,"F", "M", key = "gender", value = "Beta")
+period_poste2 <- gather(period_poste,"2016", "2017","2018","2019","2020","2021","2022","2023", key = "year", value = "Beta")
 
 # Plot point estimates and 90% credible intervals for the fixed effects of qualitative predictors
-commune <- ggplot(commune_poste2, aes(x=Comuna, y=Beta)) + 
+commune <- ggplot(commune_poste2, aes(x=commune, y=Beta)) + 
   stat_summary(fun.data = f, geom="boxplot",
                fill='steelblue',width = 0.1,position = position_dodge(width=0.5))+
   stat_summary(fun=median, geom="point", shape=21, size=4, col = "black",bg="cadetblue2")+
@@ -127,7 +127,7 @@ commune <- ggplot(commune_poste2, aes(x=Comuna, y=Beta)) +
   theme(aspect.ratio = .8)+
   coord_flip()
 
-scheme <- ggplot(scheme_poste2, aes(x=Tipo, y=Beta)) + 
+scheme <- ggplot(scheme_poste2, aes(x=type, y=Beta)) + 
   stat_summary(fun.data = f, geom="boxplot",
                fill='steelblue',width = 0.03,position = position_dodge(width=0.5))+
   stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
@@ -136,7 +136,7 @@ scheme <- ggplot(scheme_poste2, aes(x=Tipo, y=Beta)) +
   theme(aspect.ratio = .5)+
   coord_flip()
 
-development <- ggplot(development_poste2, aes(x=Tipo, y=Beta)) + 
+development <- ggplot(development_poste2, aes(x=type, y=Beta)) + 
   stat_summary(fun.data = f, geom="boxplot",
                fill='steelblue',width = 0.03,position = position_dodge(width=0.5))+
   stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
@@ -145,7 +145,7 @@ development <- ggplot(development_poste2, aes(x=Tipo, y=Beta)) +
   theme(aspect.ratio = .5)+
   coord_flip()
 
-security <- ggplot(security_poste2, aes(x=Tipo, y=Beta)) + 
+security <- ggplot(security_poste2, aes(x=type, y=Beta)) + 
   stat_summary(fun.data = f, geom="boxplot",
                fill='steelblue',width = 0.04,position = position_dodge(width=0.5))+
   stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
@@ -154,7 +154,7 @@ security <- ggplot(security_poste2, aes(x=Tipo, y=Beta)) +
   theme(aspect.ratio = .5)+
   coord_flip()
 
-gender <- ggplot(gender_poste2, aes(x=Sexo, y=Beta)) + 
+gender <- ggplot(gender_poste2, aes(x=gender, y=Beta)) + 
   stat_summary(fun.data = f, geom="boxplot",
                fill='steelblue',width = 0.04,position = position_dodge(width=0.5))+
   stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
@@ -163,7 +163,7 @@ gender <- ggplot(gender_poste2, aes(x=Sexo, y=Beta)) +
   theme(aspect.ratio = .5)+
   coord_flip()
 
-period <- ggplot(period_poste2, aes(x=Periodo, y=Beta)) + 
+period <- ggplot(period_poste2, aes(x=year, y=Beta)) + 
   stat_summary(fun.data = f, geom="boxplot",
                fill='steelblue',width = 0.04,position = position_dodge(width=0.5))+
   stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
@@ -175,14 +175,14 @@ period <- ggplot(period_poste2, aes(x=Periodo, y=Beta)) +
 ## Point estimate and 90% credibility intervals for the  odds ratios of quantitative 
 ## predictor variables
 
-# age
+# age variable
 round(exp(quantile(beta_poste$Age, probs = c(0.05,0.5,0.95))),3)
 
-# weight
+# weight variable
 round(exp(quantile(beta_poste$Weight, probs = c(0.05,0.5,0.95))),3) 
 
-# length/height
+# length/height variable
 round(exp(quantile(beta_poste$`length/height`, probs = c(0.05,0.5,0.95))),3)
 
-# Gestational age
+# gestational age variable
 round(exp(quantile(beta_poste$`Gestational age`, probs = c(0.05,0.5,0.95))),3) 

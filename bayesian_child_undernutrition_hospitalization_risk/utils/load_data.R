@@ -1,5 +1,10 @@
+# The following script contains functions to perform basic and necessary actions
+# for running the code, such as loading and saving data.
+
+## Loading libraries
 library(readxl)
 
+## Function to upload necessary files in .xlsx, .txt and .csc formats
 LoadData <- function(file_name, data_type = "raw", ...){
   
   path <- dirname(getwd())
@@ -26,6 +31,7 @@ LoadData <- function(file_name, data_type = "raw", ...){
   }
 }
 
+## Function to save an object containing a dataset as a .csv file
 SaveData <- function(dataframe, data_type = "raw", file_name, ...){
   
   # path <- paste0(dirname(getwd()), "/data/", data_folder,"/", file_name)
