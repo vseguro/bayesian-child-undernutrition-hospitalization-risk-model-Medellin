@@ -1,3 +1,6 @@
+// The following code implements the proposed model in Stan, defining the statistical structure of 
+// the model and its respective parameters.
+
 data {
 
   // Sample size

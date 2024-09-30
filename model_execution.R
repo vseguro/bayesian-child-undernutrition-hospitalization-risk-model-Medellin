@@ -1,4 +1,5 @@
-# The following code 
+# The following code implements the proposed model, allowing to obtain the estimates of the 
+# parameters taken into account: fixed effects and variances associated to each qualitative variable.
 
 library(rstan)
 library(HDInterval)
@@ -12,11 +13,11 @@ source("bayesian_child_undernutrition_hospitalization_risk/features/build_featur
 final_data <- BuildFeatures()
 
 # The variables of the model are defined:
-y <- datos_final$pac_hos_ 
-x1 <-(datos_final$edad_ - mean(datos_final$edad_))
-x3 <- (datos_final$peso_act - mean(datos_final$peso_act))
-x4 <- (datos_final$talla_act - mean(datos_final$talla_act))
-x5 <- (datos_final$edad_ges - mean(datos_final$edad_ges))
+y <- final_data$pac_hos_ 
+x1 <-(final_data$edad_ - mean(final_data$edad_))
+x3 <- (final_data$peso_act - mean(final_data$peso_act))
+x4 <- (final_data$talla_act - mean(final_data$talla_act))
+x5 <- (final_data$edad_ges - mean(final_data$edad_ges))
 
 # The design matrix is defined:
 X_models12 <- model.matrix(~ x1 + x3 + x4 + x5) 
@@ -31,7 +32,7 @@ stan_data_models12 <- list(
   
   "y" = y,
   
-  "N" = nrow(datos_final), # Number of observations
+  "N" = nrow(final_data), # Number of observations
   
   "P" = ncol(X_models12),  # Number of fixed parameters
   
@@ -50,17 +51,17 @@ stan_data_models12 <- list(
   # Data vectors are defined for the categorical variables: commune, scheme, development, security, 
   # gender and period:
   
-  "Commune" = datos_final$comuna,
+  "Commune" = final_data$comuna,
   
-  "Scheme" = datos_final$esq_vac,
+  "Scheme" = final_data$esq_vac,
   
-  "Development" = datos_final$crec_dllo,
+  "Development" = final_data$crec_dllo,
   
-  "Security" = datos_final$tipo_ss_, 
+  "Security" = final_data$tipo_ss_, 
   
-  "Gender" = datos_final$sexo_,
+  "Gender" = final_data$sexo_,
   
-  "Period" = datos_final$year_
+  "Period" = final_data$year_
   
 )
 
@@ -115,18 +116,18 @@ gender_sim <- c(fit_models12@sim[[1]][[1]]$S_gender,fit_models12@sim[[1]][[2]]$S
 period_sim <- c(fit_models12@sim[[1]][[1]]$S_period,fit_models12@sim[[1]][[2]]$S_period,fit_models12@sim[[1]][[3]]$S_period)
 
 # Save fixed effects samples (betas):
-write_posterior_data(beta_poste, '/processed/fixed_effects_samples/posterior_betas.txt', 5)
-write_posterior_data(commune_poste, '/processed/fixed_effects_samples/posterior_communes.txt', 22)
-write_posterior_data(scheme_poste, '/processed/fixed_effects_samples/posterior_schemes.txt', 3)
-write_posterior_data(development_poste, '/processed/fixed_effects_samples/posterior_growth.txt', 2)
-write_posterior_data(security_poste, '/processed/fixed_effects_samples/posterior_security.txt', 5)
-write_posterior_data(gender_poste, '/processed/fixed_effects_samples/posterior_gender.txt', 2)
-write_posterior_data(period_poste, '/processed/fixed_effects_samples/posterior_period.txt', 8)
+write_posterior_data(beta_poste,'fixed_effects_samples', 'posterior_betas.txt', 5)
+write_posterior_data(commune_poste, 'fixed_effects_samples', 'posterior_communes.txt', 22)
+write_posterior_data(scheme_poste, 'fixed_effects_samples', 'posterior_schemes.txt', 3)
+write_posterior_data(development_poste, 'fixed_effects_samples', 'posterior_growth.txt', 2)
+write_posterior_data(security_poste, 'fixed_effects_samples', 'posterior_security.txt', 5)
+write_posterior_data(gender_poste, 'fixed_effects_samples','posterior_gender.txt', 2)
+write_posterior_data(period_poste, 'fixed_effects_samples', 'posterior_period.txt', 8)
 
 # Save variance samples (S_alpha):
-write_posterior_data(commune_poste, '/processed/variance_samples/S_commune.txt', 1, as_df = F)
-write_posterior_data(commune_poste, '/processed/variance_samples/S_scheme.txt', 1, as_df = F)
-write_posterior_data(commune_poste, '/processed/variance_samples/S_development.txt', 1, as_df = F)
-write_posterior_data(commune_poste, '/processed/variance_samples/S_security.txt', 1, as_df = F)
-write_posterior_data(commune_poste, '/processed/variance_samples/S_gender.txt', 1, as_df = F)
-write_posterior_data(commune_poste, '/processed/variance_samples/S_period.txt', 1, as_df = F)
+write_posterior_data(commune_poste, 'variance_samples', 'S_commune.txt', 1)
+write_posterior_data(commune_poste, 'variance_samples', 'S_scheme.txt', 1)
+write_posterior_data(commune_poste, 'variance_samples', 'S_development.txt', 1)
+write_posterior_data(commune_poste, 'variance_samples', 'S_security.txt', 1)
+write_posterior_data(commune_poste, 'variance_samples', 'S_gender.txt', 1)
+write_posterior_data(commune_poste, 'variance_samples', 'S_period.txt', 1)

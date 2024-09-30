@@ -48,7 +48,14 @@ SaveData <- function(dataframe, data_type = "raw", file_name, ...){
 }
 
 ## Function to save the model outputs: fixed effects sample and variance samples as txt.
-write_posterior_data <- function(data, file_path, ncolumns, as_df = TRUE) {
+write_posterior_data <- function(data, data_type, file_name, ncolumns, as_df = TRUE) {
+  
+  path <- dirname(getwd())
+  if(sub(".*/", "", path) != "bayesian-child-undernutrition-hospitalization-risk-model-Medellin"){
+    path <- paste0(dirname(getwd()),"/bayesian-child-undernutrition-hospitalization-risk-model-Medellin")
+  }
+  
+  file_path <- paste0(path, "/data/processed/", data_type, "/", file_name)
   
   # Converts the object to dataframe
   if(as_df == TRUE){
