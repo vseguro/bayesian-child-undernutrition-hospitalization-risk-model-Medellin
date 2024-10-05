@@ -21,13 +21,19 @@ For the execution of the model it is important to configure the tool chain for u
 │   └── processed       <- The final, canonical data sets for modeling.
 │       ├── fixed_effects_samples  <- The final, samples of the posteriori distributions of the predictor variables. 
 │       └── variance_samples       <- The final, samples from the posterior distributions of the finite variance of each qualitative predictor.
+│       ├── fixed_effects_samples_CIAF  <- The final, samples of the posteriori distributions of the predictor variables for model with CIAF index. 
+│       └── variance_samples_CIAF       <- The final, samples from the posterior distributions of the finite variance of each qualitative predictorfor model with CIAF index.
 │
 ├── model              <- Stan language code for model implementation. 
+│   ├── stan_model.stan             <- Original model.
+│   └── stan_model_with_CIAF_index.stan     <- Model with CIAF index.
 │
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
 │   └── figures        <- Generated graphics and figures to be used in reporting
 │
 ├── model_execution.R   <- Code to implement the model.
+│
+├── model_execution_with_CIAF_index.R   <- Code to implement the model with CIAF index.
 │
 └── bayesian_child_undernutrition_hospitalization_risk  <- Source code for use in this project.
     │

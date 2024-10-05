@@ -47,6 +47,20 @@ BuildFeatures <- function(){
                            full_data_zscore$HAZ < -6 | full_data_zscore$HAZ > 6 | 
                            full_data_zscore$WAZ < -5 | full_data_zscore$WAZ > 5))
   
+  # Create levels for variable CIAF:
+  final_data <- final_data %>%
+    mutate(
+      CIAF = case_when(
+        WAZ > -2 & HAZ > -2 & WHZ > -2 ~ 1, # No anthropometric failure
+        WHZ <= -2 & WAZ > -2 & HAZ > -2 ~ 2, # Wasting only
+        WHZ <= -2 & WAZ <= -2 & HAZ > -2 ~ 3, # Wasting and underweight
+        WHZ <= -2 & WAZ <= -2 & HAZ <= -2 ~ 4, # Wasting, underweight and stunting
+        WHZ > -2 & WAZ <= -2 & HAZ <= -2 ~ 5, # Stunting and underweight
+        WHZ > -2 & WAZ > -2 & HAZ <= -2 ~ 6, # Stunting only
+        WHZ > -2 & WAZ <= -2 & HAZ > -2 ~ 7, # Underweight only
+      )
+    )
+
   ## Factor encoding for the variable 'pac_hos_' 
   ## (hospitalized status: 1 for yes, 0 for no)
   final_data <- final_data %>%

@@ -48,6 +48,8 @@ stan_data_models12 <- list(
   
   "Y" = 8, # Year levels
   
+  "I" = 7, # CIAF index levels 
+  
   # Data vectors are defined for the categorical variables: commune, scheme, development, security, 
   # gender and period:
   
@@ -61,13 +63,15 @@ stan_data_models12 <- list(
   
   "Gender" = final_data$sexo_,
   
-  "Period" = final_data$year_
+  "Period" = final_data$year_,
+  
+  "Index" = final_data$CIAF,
   
 )
 
 # Fitting of the model with the configuration of its execution.
 fit_models12 <- stan(
-  file = "model/stan_model.stan", 
+  file = "model/stan_model_with_CIAF_index.stan", 
   data = stan_data_models12, 
   chains = 3, 
   iter = 200000, 
@@ -97,6 +101,8 @@ print(fit_models12, pars = "gender_cen")
 # Summary of fixed effects for period
 print(fit_models12, pars = "period_cen")
 
+# Summary of fixed effects for CIAF index
+print(fit_models12, pars = "index_cen")
 
 # The values for parameters and fixed effects are extracted in txt:
 beta_poste <- extract(fit_models12, pars = "beta")
@@ -106,6 +112,8 @@ development_poste <- extract(fit_models12, pars = "development_cen")
 security_poste <- extract(fit_models12, pars = "security_cen")
 gender_poste <- extract(fit_models12, pars = "gender_cen")
 period_poste <- extract(fit_models12, pars = "period_cen")
+index_poste <- extract(fit_models12, pars = "index_cen")
+
 
 # The S_alpha is extracted and saved in txt.
 commune_sim <- c(fit_models12@sim[[1]][[1]]$S_commune,fit_models12@sim[[1]][[2]]$S_commune ,fit_models12@sim[[1]][[3]]$S_commune)
@@ -114,15 +122,18 @@ development_sim <- c(fit_models12@sim[[1]][[1]]$S_development,fit_models12@sim[[
 security_sim <- c(fit_models12@sim[[1]][[1]]$S_security,fit_models12@sim[[1]][[2]]$S_security,fit_models12@sim[[1]][[3]]$S_security)
 gender_sim <- c(fit_models12@sim[[1]][[1]]$S_gender,fit_models12@sim[[1]][[2]]$S_gender,fit_models12@sim[[1]][[3]]$S_gender)
 period_sim <- c(fit_models12@sim[[1]][[1]]$S_period,fit_models12@sim[[1]][[2]]$S_period,fit_models12@sim[[1]][[3]]$S_period)
+ind_sim <- c(fit_models12@sim[[1]][[1]]$S_index,fit_models12@sim[[1]][[2]]$S_index,fit_models12@sim[[1]][[3]]$S_index)
+
 
 # Save fixed effects samples (betas):
-write_posterior_data(beta_poste,'fixed_effects_samples', 'posterior_betas.txt', 5)
-write_posterior_data(commune_poste, 'fixed_effects_samples', 'posterior_communes.txt', 22)
-write_posterior_data(scheme_poste, 'fixed_effects_samples', 'posterior_schemes.txt', 3)
-write_posterior_data(development_poste, 'fixed_effects_samples', 'posterior_growth.txt', 2)
-write_posterior_data(security_poste, 'fixed_effects_samples', 'posterior_security.txt', 5)
-write_posterior_data(gender_poste, 'fixed_effects_samples','posterior_gender.txt', 2)
-write_posterior_data(period_poste, 'fixed_effects_samples', 'posterior_period.txt', 8)
+write_posterior_data(beta_poste,'fixed_effects_samples_CIAF', 'posterior_betas.txt', 5)
+write_posterior_data(commune_poste, 'fixed_effects_samples_CIAF', 'posterior_communes.txt', 22)
+write_posterior_data(scheme_poste, 'fixed_effects_samples_CIAF', 'posterior_schemes.txt', 3)
+write_posterior_data(development_poste, 'fixed_effects_samples_CIAF', 'posterior_growth.txt', 2)
+write_posterior_data(security_poste, 'fixed_effects_samples_CIAF', 'posterior_security.txt', 5)
+write_posterior_data(gender_poste, 'fixed_effects_samples_CIAF','posterior_gender.txt', 2)
+write_posterior_data(period_poste, 'fixed_effects_samples_CIAF', 'posterior_period.txt', 8)
+write_posterior_data(index_poste, 'fixed_effects_samples_CIAF', 'posterior_index.txt', 8)
 
 # Save variance samples (S_alpha):
 write_posterior_data(commune_sim, 'variance_samples_CIAF', 'S_commune.txt', 1)
@@ -131,3 +142,5 @@ write_posterior_data(development_sim, 'variance_samples_CIAF', 'S_development.tx
 write_posterior_data(security_sim, 'variance_samples_CIAF', 'S_security.txt', 1)
 write_posterior_data(gender_sim, 'variance_samples_CIAF', 'S_gender.txt', 1)
 write_posterior_data(period_sim, 'variance_samples_CIAF', 'S_period.txt', 1)
+write_posterior_data(index_sim, 'variance_samples_CIAF', 'S_index.txt', 1)
+
