@@ -70,7 +70,7 @@ fit_models12 <- stan(
   file = "model/stan_model.stan", 
   data = stan_data_models12, 
   chains = 3, 
-  iter = 200000, 
+  iter =  200000, 
   warmup = 80000, 
   cores = 3, 
   thin = 4
@@ -125,9 +125,9 @@ write_posterior_data(gender_poste, 'fixed_effects_samples','posterior_gender.txt
 write_posterior_data(period_poste, 'fixed_effects_samples', 'posterior_period.txt', 8)
 
 # Save variance samples (S_alpha):
-write_posterior_data(commune_sim, 'variance_samples_CIAF', 'S_commune.txt', 1)
-write_posterior_data(scheme_sim, 'variance_samples_CIAF', 'S_scheme.txt', 1)
-write_posterior_data(development_sim, 'variance_samples_CIAF', 'S_development.txt', 1)
-write_posterior_data(security_sim, 'variance_samples_CIAF', 'S_security.txt', 1)
-write_posterior_data(gender_sim, 'variance_samples_CIAF', 'S_gender.txt', 1)
-write_posterior_data(period_sim, 'variance_samples_CIAF', 'S_period.txt', 1)
+write_posterior_data(commune_sim, 'variance_samples', 'S_commune.txt', 1)
+write_posterior_data(scheme_sim, 'variance_samples', 'S_scheme.txt', 1)
+write_posterior_data(development_sim, 'variance_samples', 'S_development.txt', 1)
+write_posterior_data(security_sim, 'variance_samples', 'S_security.txt', 1)
+write_posterior_data(gender_sim, 'variance_samples', 'S_gender.txt', 1)
+write_posterior_data(period_sim, 'variance_samples', 'S_period.txt', 1)

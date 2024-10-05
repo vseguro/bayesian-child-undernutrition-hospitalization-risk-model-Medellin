@@ -65,7 +65,7 @@ stan_data_models12 <- list(
   
   "Period" = final_data$year_,
   
-  "Index" = final_data$CIAF,
+  "Index" = final_data$CIAF
   
 )
 
@@ -74,7 +74,7 @@ fit_models12 <- stan(
   file = "model/stan_model_with_CIAF_index.stan", 
   data = stan_data_models12, 
   chains = 3, 
-  iter = 200000, 
+  iter = 200000,
   warmup = 80000, 
   cores = 3, 
   thin = 4
@@ -122,7 +122,7 @@ development_sim <- c(fit_models12@sim[[1]][[1]]$S_development,fit_models12@sim[[
 security_sim <- c(fit_models12@sim[[1]][[1]]$S_security,fit_models12@sim[[1]][[2]]$S_security,fit_models12@sim[[1]][[3]]$S_security)
 gender_sim <- c(fit_models12@sim[[1]][[1]]$S_gender,fit_models12@sim[[1]][[2]]$S_gender,fit_models12@sim[[1]][[3]]$S_gender)
 period_sim <- c(fit_models12@sim[[1]][[1]]$S_period,fit_models12@sim[[1]][[2]]$S_period,fit_models12@sim[[1]][[3]]$S_period)
-ind_sim <- c(fit_models12@sim[[1]][[1]]$S_index,fit_models12@sim[[1]][[2]]$S_index,fit_models12@sim[[1]][[3]]$S_index)
+index_sim <- c(fit_models12@sim[[1]][[1]]$S_index,fit_models12@sim[[1]][[2]]$S_index,fit_models12@sim[[1]][[3]]$S_index)
 
 
 # Save fixed effects samples (betas):
