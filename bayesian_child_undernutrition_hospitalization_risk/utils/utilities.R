@@ -52,3 +52,39 @@ remove_outliers <- function(x, na.rm = TRUE, ...) {
   y[x > (qnt[2] + H)] <- NA
   y
 }
+
+# Function implemented in the "estimates_anova.R" file to create and save in a pdf
+# file the graph of the point estimate and credibility interval of each qualitative 
+# predictor
+generate_plot <- function(data, title, path, name_file, width = 8, height = 6) {
+  # Validate the database dimensions
+  if (ncol(data) == 2 && nrow(data) > 0) {
+    # Create plot
+    plot <- ggplot(data, aes(x = data[,1], y = data[,2])) + 
+      stat_summary(fun.data = f, geom = "boxplot", fill = 'steelblue', width = 0.04, 
+                   position = position_dodge(width = 0.5)) +
+      stat_summary(fun = median, geom = "point", shape = 21, size = 5, 
+                   col = "black", bg = "cadetblue2") +
+      geom_hline(aes(yintercept = 0), linetype = "dashed", color = "blue", size = 0.5) +
+      labs(title = title, y = expression(gamma), x = "") +
+      theme(aspect.ratio = .6) + 
+      coord_flip()
+    
+    # Show plot
+    print(plot)
+    
+    # Define the save path
+    path <- file.path(path, paste0("plot_", name_file, ".pdf"))
+    
+    # Save plot as a PDF file
+    tryCatch({
+      ggsave(filename = path, plot = plot, width = width, height = height)
+      print(paste0("The plot was successfully saved in ", path))
+    }, error = function(e) {
+      print("The plot was not saved correctly: ", e$message)
+    })
+    
+  } else {
+    print("The plot was not generated. Check the entered parameters.")
+  }
+}
