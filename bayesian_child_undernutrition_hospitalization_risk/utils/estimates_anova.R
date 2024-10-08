@@ -24,35 +24,17 @@ gender_sim <- LoadData("S_gender.txt", data_type = "processed/variance_samples")
 period_sim <- LoadData("S_period.txt", data_type = "processed/variance_samples")
 
 # Remove sample values that are significantly below or above the 5% and 95% quantiles,
-# respectively, based on the interquartile range (IQR)
-commune_sim <- remove_outliers(commune_sim$V1)
-development_sim <- remove_outliers(development_sim$V1)
-security_sim <- remove_outliers(security_sim$V1)
-scheme_sim <- remove_outliers(scheme_sim$V1)
-gender_sim <- remove_outliers(gender_sim$V1)
-period_sim <- remove_outliers(period_sim$V1)
-
-# Save results from the previous step as data frames
-commune_sim <- as.data.frame(commune_sim)
-colnames(commune_sim) <- "V1"
-
-development_sim <- as.data.frame(development_sim)
-colnames(development_sim) <- "V1"
-
-security_sim <- as.data.frame(security_sim)
-colnames(security_sim) <- "V1"
-
-scheme_sim <- as.data.frame(scheme_sim)
-colnames(scheme_sim) <- "V1"
-
-gender_sim <- as.data.frame(gender_sim)
-colnames(gender_sim) <- "V1"
-
-period_sim <- as.data.frame(period_sim)
-colnames(period_sim) <- "V1"
+# respectively, based on the interquartile range (IQR) and save results as data frames
+sample_data <- lapply(c(commune_sim,development_sim,security_sim,scheme_sim,gender_sim,period_sim), 
+                      function(f) {
+                        data <- remove_outliers(f)
+                        data <- as.data.frame(data)
+                        colnames(data) <- "V1"
+                        data
+                      })
 
 # Merge data frame with final samples
-S_alphas <- rbind(commune_sim,development_sim,security_sim,scheme_sim,gender_sim,period_sim) 
+S_alphas <- do.call(rbind, sample_data)
 # Create data frame with the names of the qualitative predictors
 groups <- data.frame(rep(c("Commune(22)","Growth and \n development program(2)","Type of Social \n security(5)","Vaccination \n schedule(3)","Gender(2)", "Year(8)"), each = 150000))
 # Combine S_alphas and groups by columns, obtaining a new data frame
@@ -68,6 +50,10 @@ Anova <- ggplot(S_alphas_grup, aes(x=Grupo, y=S_alpha)) +
   theme(aspect.ratio = .6)+
   labs(y = expression(S[alpha]), x = "", title = "Bayesian ANOVA")+
   coord_flip()
+
+# Save plot
+ggsave(filename = "reports/figures/model_without_CIAF/plot_ANOVA.pdf",
+       plot = Anova, width = 8, height = 6)
 
 ## Point estimates and 90% credible intervals for the fixed effects of qualitative predictors
 
@@ -118,59 +104,12 @@ gender_poste2 <- gather(gender_poste,"F", "M", key = "gender", value = "Beta")
 period_poste2 <- gather(period_poste,"2016", "2017","2018","2019","2020","2021","2022","2023", key = "year", value = "Beta")
 
 # Plot point estimates and 90% credible intervals for the fixed effects of qualitative predictors
-commune <- ggplot(commune_poste2, aes(x=commune, y=Beta)) + 
-  stat_summary(fun.data = f, geom="boxplot",
-               fill='steelblue',width = 0.1,position = position_dodge(width=0.5))+
-  stat_summary(fun=median, geom="point", shape=21, size=4, col = "black",bg="cadetblue2")+
-  geom_hline(aes(yintercept=0), linetype="dashed", color = "blue",size = 0.5)+
-  labs(title = "Communes", y= expression(gamma), x = "")+
-  theme(aspect.ratio = .8)+
-  coord_flip()
-
-scheme <- ggplot(scheme_poste2, aes(x=type, y=Beta)) + 
-  stat_summary(fun.data = f, geom="boxplot",
-               fill='steelblue',width = 0.03,position = position_dodge(width=0.5))+
-  stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
-  geom_hline(aes(yintercept=0), linetype="dashed", color = "blue")+
-  labs(title = "Vaccination schedule", y= expression(gamma), x = "")+
-  theme(aspect.ratio = .5)+
-  coord_flip()
-
-development <- ggplot(development_poste2, aes(x=type, y=Beta)) + 
-  stat_summary(fun.data = f, geom="boxplot",
-               fill='steelblue',width = 0.03,position = position_dodge(width=0.5))+
-  stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
-  geom_hline(aes(yintercept=0), linetype="dashed", color = "blue")+
-  labs(title = "Growth and development program", y= expression(gamma), x = "")+
-  theme(aspect.ratio = .5)+
-  coord_flip()
-
-security <- ggplot(security_poste2, aes(x=type, y=Beta)) + 
-  stat_summary(fun.data = f, geom="boxplot",
-               fill='steelblue',width = 0.04,position = position_dodge(width=0.5))+
-  stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
-  geom_hline(aes(yintercept=0), linetype="dashed", color = "blue")+
-  labs(title = "Type of social security", y= expression(gamma), x = "")+
-  theme(aspect.ratio = .5)+
-  coord_flip()
-
-gender <- ggplot(gender_poste2, aes(x=gender, y=Beta)) + 
-  stat_summary(fun.data = f, geom="boxplot",
-               fill='steelblue',width = 0.04,position = position_dodge(width=0.5))+
-  stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
-  geom_hline(aes(yintercept=0), linetype="dashed", color = "blue")+
-  labs(title = "Gender", y= expression(gamma), x = "")+
-  theme(aspect.ratio = .5)+
-  coord_flip()
-
-period <- ggplot(period_poste2, aes(x=year, y=Beta)) + 
-  stat_summary(fun.data = f, geom="boxplot",
-               fill='steelblue',width = 0.04,position = position_dodge(width=0.5))+
-  stat_summary(fun=median, geom="point", shape=21, size=5, col = "black",bg="cadetblue2")+
-  geom_hline(aes(yintercept=0), linetype="dashed", color = "blue")+
-  labs(title = "Year", y= expression(gamma), x = "")+
-  theme(aspect.ratio = .5)+
-  coord_flip()
+generate_plot(data = commune_poste2,title = "Communes",name_file = "commune",path = "reports/figures/model_without_CIAF")
+generate_plot(data = scheme_poste2,title = "Vaccination schedule",name_file = "scheme",path = "reports/figures/model_without_CIAF")
+generate_plot(data = development_poste2,title = "Growth and development program",name_file = "development",path = "reports/figures/model_without_CIAF")
+generate_plot(data = security_poste2,title = "Type of social security",name_file = "security",path = "reports/figures/model_without_CIAF")
+generate_plot(data = gender_poste2,title = "Gender",name_file = "gender",path = "reports/figures/model_without_CIAF")
+generate_plot(data = period_poste2,title = "Year",name_file = "year",path = "reports/figures/model_without_CIAF")
 
 ## Point estimate and 90% credibility intervals for the  odds ratios of quantitative 
 ## predictor variables
