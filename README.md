@@ -22,7 +22,7 @@ For the execution of the model it is important to configure the tool chain for u
 │       ├── fixed_effects_samples  <- The final, samples of the posteriori distributions of the predictor variables. 
 │       └── variance_samples       <- The final, samples from the posterior distributions of the finite variance of each qualitative predictor.
 │       ├── fixed_effects_samples_CIAF  <- The final, samples of the posteriori distributions of the predictor variables for model with CIAF index. 
-│       └── variance_samples_CIAF       <- The final, samples from the posterior distributions of the finite variance of each qualitative predictorfor model with CIAF index.
+│       └── variance_samples_CIAF       <- The final, samples from the posterior distributions of the finite variance of each qualitative predictor for model with CIAF index.
 │
 ├── model              <- Stan language code for model implementation. 
 │   ├── stan_model.stan             <- Original model.
@@ -30,21 +30,25 @@ For the execution of the model it is important to configure the tool chain for u
 │
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
 │   └── figures        <- Generated graphics and figures to be used in reporting
+        ├── model_with_CIAF <- plots of the model with CIAF: estimates, ANOVA, and ROC curve
+        └── model_without_CIAF <- plots of the model without CIAF: estimates, ANOVA, and ROC curve
 │
-├── model_execution.R   <- Code to implement the model.
+├── model_execution.R  <- Code to implement the model.
 │
 ├── model_execution_with_CIAF_index.R   <- Code to implement the model with CIAF index.
 │
 └── bayesian_child_undernutrition_hospitalization_risk  <- Source code for use in this project.
     │
-    ├── data                   <- Store useful variables and configuration
-    │   └──make_dataset.R      <- Scripts to download or generate data
+    ├── data                  <- Store useful variables and configuration
+    │   └──make_dataset.R     <- Scripts to download or generate data
     ├── features 
-    │    └── build_features.R  <- Code to create features for modeling
+    │    └── build_features.R <- Code to create features for modeling
     └── utils                
        ├── load_data.R        <- Functions to read and write data.
        ├── utilities.R        <- Auxiliary functions for the project.        
-       ├── estimates_anova    <- Code to build and calculates point estimates and 90% credible intervals plots.
-       └── roc_curve.R        <- Code to roc curve plot.
+       ├── estimates_anova.R  <- Code to build and calculates point estimates and 90% credible intervals plots.
+       ├── estimates_anova_with_CIAF.R  <- Code to build and calculates point estimates and 90% credible intervals plots for model with CIAF 
+       ├── roc_curve.R            <- Code to roc curve plot
+       └── roc_curve_with_CIAF.R  <- Code to roc curve plot for model with CIAF
   
 ```
