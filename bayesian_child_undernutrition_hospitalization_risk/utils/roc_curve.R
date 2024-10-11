@@ -36,7 +36,7 @@ period_poste <- LoadData(file_name = "posterior_period.txt", data_type = "proces
 
 ## Obtain a subsample of size 20.000 for each effect
 beta_poste <- sapply(beta_poste, sample, size = 20000,replace = TRUE)
-commune_poste <- sapply(commune_poste, sample, size = 20000,replace = TRUE)
+commune_poste <- sapply(commune_poste, sample, size = 20000,replace = TRUE) 
 sheme_poste <- sapply(sheme_poste, sample, size = 20000,replace = TRUE)
 development_poste <- sapply(development_poste, sample, size = 20000,replace = TRUE)
 security_poste <- sapply(security_poste, sample, size = 20000,replace = TRUE)
@@ -70,8 +70,11 @@ predc <- prediction(dfc$prediccionesc, dfc$labels)
 perfc<- performance(predc,"tpr","fpr")
 
 ## Plot the ROC curve
+pdf("reports/figures/model_without_CIAF/plot_ROC_curve.pdf",
+    width = 8, height = 6) 
 plot(perfc,colorize=TRUE,type="l", main = "Curva ROC")
 abline(a=0,b=1,col="red")
+dev.off()
 
 
 ## Calculate the AUC (Area Under the Curve)
