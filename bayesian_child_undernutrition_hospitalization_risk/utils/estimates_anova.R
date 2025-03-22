@@ -104,12 +104,19 @@ gender_poste2 <- gather(gender_poste,"F", "M", key = "gender", value = "Beta")
 period_poste2 <- gather(period_poste,"2016", "2017","2018","2019","2020","2021","2022","2023", key = "year", value = "Beta")
 
 # Plot point estimates and 90% credible intervals for the fixed effects of qualitative predictors
-generate_plot(data = commune_poste2,title = "Communes",name_file = "commune",path = "reports/figures/model_without_CIAF")
-generate_plot(data = scheme_poste2,title = "Vaccination schedule",name_file = "scheme",path = "reports/figures/model_without_CIAF")
-generate_plot(data = development_poste2,title = "Growth and development program",name_file = "development",path = "reports/figures/model_without_CIAF")
-generate_plot(data = security_poste2,title = "Type of social security",name_file = "security",path = "reports/figures/model_without_CIAF")
-generate_plot(data = gender_poste2,title = "Gender",name_file = "gender",path = "reports/figures/model_without_CIAF")
-generate_plot(data = period_poste2,title = "Year",name_file = "year",path = "reports/figures/model_without_CIAF")
+commune <- generate_plot(data = commune_poste2,title = "Communes",name_file = "commune",path = "reports/figures/model_without_CIAF")
+scheme <- generate_plot(data = scheme_poste2,title = "Vaccination schedule",name_file = "scheme",path = "reports/figures/model_without_CIAF")
+development <- generate_plot(data = development_poste2,title = "Growth and development program",name_file = "development",path = "reports/figures/model_without_CIAF")
+security <- generate_plot(data = security_poste2,title = "Type of social security",name_file = "security",path = "reports/figures/model_without_CIAF")
+gender <- generate_plot(data = gender_poste2,title = "Gender",name_file = "gender",path = "reports/figures/model_without_CIAF")
+period <- generate_plot(data = period_poste2,title = "Year",name_file = "year",path = "reports/figures/model_without_CIAF")
+
+# Opción 1
+row_12 <- (commune | gender) / (security | development) 
+row_3 <- (scheme | period) 
+
+# Opción 2
+(commune | gender) / (security | development) / (scheme | period)
 
 ## Point estimate and 90% credibility intervals for the  odds ratios of quantitative 
 ## predictor variables

@@ -110,13 +110,22 @@ index_poste2 <- gather(index_poste,"No anthropometric failure", "Wasting only", 
 stunting", "Stunting and underweight", "Stunting only", "Underweight only", key = "index", value = "Beta")
 
 # Plot point estimates and 90% credible intervals for the fixed effects of qualitative predictors
-generate_plot(data = commune_poste2,title = "Communes",name_file = "commune",path = "reports/figures/model_with_CIAF")
-generate_plot(data = scheme_poste2,title = "Vaccination schedule",name_file = "scheme",path = "reports/figures/model_with_CIAF")
-generate_plot(data = development_poste2,title = "Growth and development program",name_file = "development",path = "reports/figures/model_with_CIAF")
-generate_plot(data = security_poste2,title = "Type of social security",name_file = "security",path = "reports/figures/model_with_CIAF")
-generate_plot(data = gender_poste2,title = "Gender",name_file = "gender",path = "reports/figures/model_with_CIAF")
-generate_plot(data = period_poste2,title = "Year",name_file = "year",path = "reports/figures/model_with_CIAF")
-generate_plot(data = index_poste2,title = "CIAF",name_file = "CIAF",path = "reports/figures/model_with_CIAF")
+commune <- generate_plot(data = commune_poste2,title = "Communes",name_file = "commune",path = "reports/figures/model_with_CIAF")
+scheme <- generate_plot(data = scheme_poste2,title = "Vaccination schedule",name_file = "scheme",path = "reports/figures/model_with_CIAF")
+development <- generate_plot(data = development_poste2,title = "Growth and development program",name_file = "development",path = "reports/figures/model_with_CIAF")
+security <- generate_plot(data = security_poste2,title = "Type of social security",name_file = "security",path = "reports/figures/model_with_CIAF")
+gender <- generate_plot(data = gender_poste2,title = "Gender",name_file = "gender",path = "reports/figures/model_with_CIAF")
+period <- generate_plot(data = period_poste2,title = "Year",name_file = "year",path = "reports/figures/model_with_CIAF")
+index <- generate_plot(data = index_poste2,title = "CIAF",name_file = "CIAF",path = "reports/figures/model_with_CIAF")
+
+# Opción 1
+row_12 <- (commune | gender) / (security | development) 
+row_3 <- (scheme | period) 
+row_4 <- index
+
+# Opción 2
+grid.arrange(security,gender,scheme,development,index,period,commune,
+             ncol = 2,widths = c(1, 1))
 
 ## Point estimate and 90% credibility intervals for the  odds ratios of quantitative 
 ## predictor variables
