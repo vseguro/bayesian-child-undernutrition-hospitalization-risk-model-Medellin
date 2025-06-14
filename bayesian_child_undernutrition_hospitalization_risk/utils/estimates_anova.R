@@ -51,10 +51,6 @@ Anova <- ggplot(S_alphas_grup, aes(x=Grupo, y=S_alpha)) +
   labs(y = expression(S[alpha]), x = "", title = "Bayesian ANOVA")+
   coord_flip()
 
-# Save plot
-ggsave(filename = "reports/figures/model_without_CIAF/plot_ANOVA.pdf",
-       plot = Anova, width = 8, height = 6)
-
 ## Point estimates and 90% credible intervals for the fixed effects of qualitative predictors
 
 # Load the samples obtained from the posterior distributions of the effects
@@ -111,12 +107,24 @@ security <- generate_plot(data = security_poste2,title = "Type of social securit
 gender <- generate_plot(data = gender_poste2,title = "Gender",name_file = "gender",path = "reports/figures/model_without_CIAF")
 period <- generate_plot(data = period_poste2,title = "Year",name_file = "year",path = "reports/figures/model_without_CIAF")
 
+commune <- ggplot(commune_poste2, aes(x = commune_poste2[,1], y = commune_poste2[,2])) + 
+  stat_summary(fun.data = f, geom = "boxplot", fill = 'steelblue', width = 0.04, 
+               position = position_dodge(width = 0.5)) +
+  stat_summary(fun = median, geom = "point", shape = 21, size = 3, 
+               col = "black", bg = "cadetblue2") +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "blue", size = 0.5) +
+  labs(title = "Communes", y = expression(gamma), x = "") +
+  theme(aspect.ratio = .6, plot.title = element_text(size = 8),
+        axis.text.y = element_text(size = 5, color = "black"),  
+        axis.text.x = element_text(size = 5, color = "black")) + 
+  coord_flip()
+
 # Opción 1
 row_12 <- (commune | gender) / (security | development) 
 row_3 <- (scheme | period) 
 
 # Opción 2
-(commune | gender) / (security | development) / (scheme | period)
+completo <- (commune | gender) / (security | development) / (scheme | period)
 
 ## Point estimate and 90% credibility intervals for the  odds ratios of quantitative 
 ## predictor variables

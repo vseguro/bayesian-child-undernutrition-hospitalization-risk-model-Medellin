@@ -62,14 +62,14 @@ generate_plot <- function(data, title, path, name_file, width = 8, height = 6) {
     # Create plot
     plot <- ggplot(data, aes(x = data[,1], y = data[,2])) + 
       stat_summary(fun.data = f, geom = "boxplot", fill = 'steelblue', width = 0.04, 
-                   position = position_dodge(width = 0.5)) +
-      stat_summary(fun = median, geom = "point", shape = 21, size = 5, 
+                   position = position_dodge(width = 0.8)) +
+      stat_summary(fun = median, geom = "point", shape = 21, size = 8, 
                    col = "black", bg = "cadetblue2") +
       geom_hline(aes(yintercept = 0), linetype = "dashed", color = "blue", size = 0.5) +
       labs(title = title, y = expression(gamma), x = "") +
-      theme(aspect.ratio = .6, plot.title = element_text(size = 8),
-            axis.text.y = element_text(size = 8),  
-            axis.text.x = element_text(size = 8)) + 
+      theme(aspect.ratio = .6, plot.title = element_text(size = 20),
+            axis.text.y = element_text(size = 12),  
+            axis.text.x = element_text(size = 12)) + 
       coord_flip()
     
     # Show plot
@@ -79,12 +79,12 @@ generate_plot <- function(data, title, path, name_file, width = 8, height = 6) {
     path <- file.path(path, paste0("plot_", name_file, ".pdf"))
     
     # Save plot as a PDF file
-    # tryCatch({
-    #   ggsave(filename = path, plot = plot, width = width, height = height)
-    #   print(paste0("The plot was successfully saved in ", path))
-    # }, error = function(e) {
-    #   print("The plot was not saved correctly: ", e$message)
-    # })
+    tryCatch({
+      ggsave(filename = path, plot = plot, width = width, height = height)
+      print(paste0("The plot was successfully saved in ", path))
+    }, error = function(e) {
+      print("The plot was not saved correctly: ", e$message)
+    })
     
     return(plot)
     

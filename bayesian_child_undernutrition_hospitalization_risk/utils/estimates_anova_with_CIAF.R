@@ -52,10 +52,6 @@ Anova <- ggplot(S_alphas_grup, aes(x=Grupo, y=S_alpha)) +
   labs(y = expression(S[alpha]), x = "", title = "Bayesian ANOVA")+
   coord_flip()
 
-# Save plot
-ggsave(filename = "reports/figures/model_with_CIAF/plot_ANOVA.pdf",
-       plot = Anova, width = 8, height = 6)
-
 ## Point estimates and 90% credible intervals for the fixed effects of qualitative predictors
 
 # Load the samples obtained from the posterior distributions of the effects
@@ -86,7 +82,7 @@ colnames(commune_poste) <- c("Altavista", "Aranjuez",
                            "Villa Hermosa","No information")
 colnames(gender_poste) <- c("F", "M")
 colnames(period_poste) <- c("2016", "2017","2018","2019","2020","2021","2022","2023")
-colnames(index_poste) <- c("No anthropometric failure", "Wasting only", "Wasting and underweight", "Wasting, underweight and
+colnames(index_poste) <- c("No anthropometric failure", "Acute undernutrition only", "Acute undernutrition and underweight", "Acute undernutrition, underweight and
 stunting", "Stunting and underweight", "Stunting only", "Underweight only")
 
 # Associate each value (sample) with its corresponding predictor level
@@ -106,7 +102,7 @@ commune_poste2 <- gather(commune_poste,"Altavista", "Aranjuez",
                        "Villa Hermosa","No information", key = "commune", value = "Beta")
 gender_poste2 <- gather(gender_poste,"F", "M", key = "gender", value = "Beta")
 period_poste2 <- gather(period_poste,"2016", "2017","2018","2019","2020","2021","2022","2023", key = "year", value = "Beta")
-index_poste2 <- gather(index_poste,"No anthropometric failure", "Wasting only", "Wasting and underweight", "Wasting, underweight and
+index_poste2 <- gather(index_poste,"No anthropometric failure", "Acute undernutrition only", "Acute undernutrition and underweight", "Acute undernutrition, underweight and
 stunting", "Stunting and underweight", "Stunting only", "Underweight only", key = "index", value = "Beta")
 
 # Plot point estimates and 90% credible intervals for the fixed effects of qualitative predictors
@@ -116,7 +112,20 @@ development <- generate_plot(data = development_poste2,title = "Growth and devel
 security <- generate_plot(data = security_poste2,title = "Type of social security",name_file = "security",path = "reports/figures/model_with_CIAF")
 gender <- generate_plot(data = gender_poste2,title = "Gender",name_file = "gender",path = "reports/figures/model_with_CIAF")
 period <- generate_plot(data = period_poste2,title = "Year",name_file = "year",path = "reports/figures/model_with_CIAF")
-index <- generate_plot(data = index_poste2,title = "CIAF",name_file = "CIAF",path = "reports/figures/model_with_CIAF")
+index <- generate_plot(data = index_poste2,title = "CIAF",name_file = "CIAF_2",path = "reports/figures/model_with_CIAF")
+
+commune <- ggplot(commune_poste2, aes(x = commune_poste2[,1], y = commune_poste2[,2])) + 
+  stat_summary(fun.data = f, geom = "boxplot", fill = 'steelblue', width = 0.04, 
+               position = position_dodge(width = 0.5)) +
+  stat_summary(fun = median, geom = "point", shape = 21, size = 3, 
+               col = "black", bg = "cadetblue2") +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "blue", size = 0.5) +
+  labs(title = "Communes", y = expression(gamma), x = "") +
+  theme(aspect.ratio = .6, plot.title = element_text(size = 8),
+        axis.text.y = element_text(size = 5, color = "black"),  
+        axis.text.x = element_text(size = 5, color = "black")) + 
+  coord_flip()
+
 
 # Opción 1
 row_12 <- (commune | gender) / (security | development) 
@@ -124,8 +133,8 @@ row_3 <- (scheme | period)
 row_4 <- index
 
 # Opción 2
-grid.arrange(security,gender,scheme,development,index,period,commune,
-             ncol = 2,widths = c(1, 1))
+completo <- (commune | gender) / (security | development) / (scheme | period)
+
 
 ## Point estimate and 90% credibility intervals for the  odds ratios of quantitative 
 ## predictor variables
